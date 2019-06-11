@@ -32,26 +32,8 @@ class App extends React.Component{
         this.unregisterAuthObserver();
     }
     
-    componentWillUpdate( nextProps, nextState, nextContext ){
-        
-        if( nextProps.getTAsFailed || nextProps.getSprintsFailed ||
-            nextProps.getLessonsFailed || nextProps.getInstructorsFailed ){
-            console.log( "Something is wrong" );
-            console.log( this.props.error );
-        }
-        
-        if( nextProps.isAuthenticated && !nextState.redirected ){
-            
-            this.setState( { redirected: true } );
-            this.props.history.push( "/dashboard" );
-        }
-        
-        if( nextProps.fetchUserInit && nextState.redirected ){
-            this.setState( { redirected: false } );
-        }
-    }
-    
     render(){
+        debugger;
         return ( <Switch>
             <Route exact path="/"
                    render={ props => <Welcome { ...props } /> }
@@ -71,12 +53,7 @@ class App extends React.Component{
 }
 
 const mstp = state => ( {
-    getTAsFailed: state.autoFill.getTAsFailed,
     isAuthenticated: state.users.isAuthenticated,
-    getSprintsFailed: state.autoFill.getSprintsFailed,
-    getLessonsFailed: state.autoFill.getLessonsFailed,
-    getInstructorsFailed: state.autoFill.getInstructorsFailed,
-    fetchUserInit: state.autoFill.fetchUserInit,
 } );
 
 export default withRouter( connect( mstp, { getUserById, checkAuth } )( App ) );

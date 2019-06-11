@@ -14,7 +14,7 @@ export default function( ComposedComponent, isAuthenticated ){
         }
         
         checkAndRedirect(){
-            
+            debugger;
             if( !isAuthenticated ){
                 this.props.history.push( "/" );
             }

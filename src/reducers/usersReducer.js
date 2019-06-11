@@ -5,7 +5,8 @@ import {
     FETCH_POTENTIAL_USER_BY_ID_INIT, FETCH_POTENTIAL_USER_BY_ID_SUCCESS,
     LINK_POTENTIAL_USER_TO_ID_FAILED, LINK_POTENTIAL_USER_TO_ID_INIT,
     LINK_POTENTIAL_USER_TO_ID_SUCCESS, CREATE_NEW_USER_FAILED,
-    CREATE_NEW_USER_SUCCESS, CREATE_NEW_USER_INIT, CLEAR_POTENTIAL_USER
+    CREATE_NEW_USER_SUCCESS, CREATE_NEW_USER_INIT, CLEAR_POTENTIAL_USER,
+    LOGOUT_SUCCESSFUL
 } from "../actions";
 
 const initialState = {
@@ -28,6 +29,9 @@ const initialState = {
 
 export const usersReducer = ( state = initialState, action ) => {
     switch( action.type ){
+        
+        case LOGOUT_SUCCESSFUL:
+            return { ...state, potentialUser: null, newUser: false };
         
         case NEW_USER:
             return {

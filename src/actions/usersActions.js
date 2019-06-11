@@ -1,5 +1,5 @@
 import { store } from "../firebase.js";
-import { cookieSave } from "./cookie";
+import { push } from "connected-react-router";
 import { action } from "./action";
 import { NEW_USER } from "./authActions";
 
@@ -8,7 +8,7 @@ export const FETCH_USER_BY_ID_SUCCESS = "FETCH_USER_BY_ID_SUCCESS";
 export const FETCH_USER_BY_ID_FAILED = "FETCH_USER_BY_ID_FAILED";
 
 export const getUserById = id => dispatch => {
-    
+    debugger;
     dispatch( action( FETCH_USER_BY_ID_INIT ) );
     store.collection( "students" )
         .doc( id )
@@ -18,6 +18,7 @@ export const getUserById = id => dispatch => {
                 const data = res.data();
                 data.id = res.id;
                 dispatch( action( FETCH_USER_BY_ID_SUCCESS, data ) );
+                dispatch( push( "/dashboard" ) );
             }else{
                 dispatch( action( NEW_USER ) );
             }
@@ -75,6 +76,7 @@ export const linkPotentialUserToId = ( id, potentialUser ) => dispatch => {
                     dispatch( action( LINK_POTENTIAL_USER_TO_ID_SUCCESS,
                         potentialUser
                     ) );
+                    dispatch( push( "/dashboard" ) );
                 } )
                 .catch( err => {
                     dispatch( action( LINK_POTENTIAL_USER_TO_ID_FAILED,
@@ -102,6 +104,7 @@ export const createNewUser = ( user ) => dispatch => {
             console.log( "Created new user" );
             
             dispatch( action( CREATE_NEW_USER_SUCCESS, user ) );
+            dispatch( push( "/dashboard" ) );
             
         } )
         .catch( err => {

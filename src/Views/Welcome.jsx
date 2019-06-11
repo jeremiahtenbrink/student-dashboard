@@ -20,15 +20,20 @@ class Welcome extends React.Component{
         lastName: "",
         course: "",
         pm: "",
-        github: ""
+        github: "",
+        redirected: false,
     };
     
+    componentDidMount(){
+        debugger;
+    }
+    
     componentDidUpdate( prevProps, prevState, snapshot ){
-        
-        if( this.props.user && this.props.history.location.pathname === "/" ){
-            
-            this.props.history.push( "/dashboard" );
-        }
+    
+    }
+    
+    componentWillMount(){
+        debugger;
     }
     
     showModal = () => {
@@ -294,6 +299,7 @@ const mstp = state => ( {
     pms: state.autoFill.pms,
     gettingPMs: state.autoFill.gettingPMs,
     uid: state.auth.uid,
+    isAuthenticated: state.users.isAuthenticated,
 } );
 
 export default connect( mstp, {

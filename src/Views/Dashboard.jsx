@@ -3,7 +3,7 @@ import { Layout, Row, Col, Card, Icon, Skeleton, Avatar, Popover } from "antd";
 import { connect } from "react-redux";
 import LambdaLogo from "../assets/logo.png";
 import {
-    fetchStudentLessons, logout, getAutoFillSprints,
+    fetchStudentLessons, logout, subscribeToAutoFillSprints,
 } from "../actions/index";
 import DailyImage from "../assets/daily.jpg";
 import SprintImage from "../assets/sprint.jpg";
@@ -16,17 +16,20 @@ class Dashboard extends React.Component{
     };
     
     componentDidMount(){
-        
+        debugger;
         this.getJoke();
-        
         if( this.props.user ){
             
             if( !this.props.gettingSprints &&
                 !this.props.gettingSprintsSuccess ){
-                this.props.getAutoFillSprints( this.props.user );
+                this.props.subscribeToAutoFillSprints( this.props.user );
             }
             this.props.fetchStudentLessons( this.props.user );
         }
+    }
+    
+    componentWillUnmount(){
+        debugger;
     }
     
     logOut = () => {
@@ -168,6 +171,6 @@ const mstp = state => ( {
 } );
 
 export default connect( mstp,
-    { fetchStudentLessons, logout, getAutoFillSprints }
+    { fetchStudentLessons, logout, subscribeToAutoFillSprints }
 )(
     Dashboard );

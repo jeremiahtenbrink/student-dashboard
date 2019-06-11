@@ -44,23 +44,22 @@ export const GET_AUTOFILL_SPRINTS_INIT = "GET_AUTOFILL_SPRINTS_INIT";
 export const GET_AUTOFILL_SPRINTS_SUCCESS = "GET_AUTOFILL_SPRINTS_SUCCESS";
 export const GET_AUTOFILL_SPRINTS_FAIL = "GET_AUTOFILL_SPRINTS_FAIL";
 
-export const getAutoFillSprints = ( user ) => dispatch => {
+export const subscribeToAutoFillSprints = ( user ) => dispatch => {
     
     if( !user.course ){
         return;
     }
     dispatch( action( GET_AUTOFILL_SPRINTS_INIT ) );
-    store.collection( "autoFill" )
+    return store.collection( "autoFill" )
         .doc( "web" )
         .collection( "courses" )
         .doc( user.course )
         .collection( "sprints" )
-        .get()
-        .then( res => {
+        .onSnapshot( snapshot => {
             
-            if( !res.empty ){
+            if( !snapshot.empty ){
                 const sprints = {};
-                res.docs.forEach( sprint => {
+                snapshot.docs.forEach( sprint => {
                     const data = sprint.data();
                     data.id = sprint.id;
                     data.course = user.course;
@@ -75,10 +74,9 @@ export const getAutoFillSprints = ( user ) => dispatch => {
                     "Error, unable to get autofill data for sprints."
                 ) );
             }
-        } )
-        .catch( err => {
-            
-            dispatch( action( GET_AUTOFILL_SPRINTS_FAIL, err.message ) );
+        }, error => {
+            dispatch( action( GET_AUTOFILL_SPRINTS_FAIL, error.message ) );
+            console.log( error );
         } );
 };
 

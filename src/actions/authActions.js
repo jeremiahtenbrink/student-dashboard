@@ -14,13 +14,14 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
-    
+    debugger;
     dispatch( { type: AUTH_INIT } );
     const { currentUser } = firebase.auth();
     
     if( currentUser ){
         getUserById( currentUser.uid )( dispatch );
         getAutoFillInit()( dispatch );
+        getUserById( currentUser.uid );
         dispatch( {
             type: AUTH_SUCCESS, payload: currentUser,
         } );
