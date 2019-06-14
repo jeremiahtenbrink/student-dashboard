@@ -1,13 +1,14 @@
-import { store } from "../firebase.js";
+import { store } from "../firebase";
 import { push } from "connected-react-router";
 import { action } from "./action";
 import { NEW_USER } from "./authActions";
+import { IUser } from "../types/UserInterface";
 
 export const FETCH_USER_BY_ID_INIT = "FETCH_USER_BY_ID_INIT";
 export const FETCH_USER_BY_ID_SUCCESS = "FETCH_USER_BY_ID_SUCCESS";
 export const FETCH_USER_BY_ID_FAILED = "FETCH_USER_BY_ID_FAILED";
 
-export const getUserById = id => dispatch => {
+export const getUserById = (id: string) => dispatch => {
     debugger;
     dispatch( action( FETCH_USER_BY_ID_INIT ) );
     store.collection( "students" )
@@ -31,12 +32,12 @@ export const FETCH_POTENTIAL_USER_BY_ID_INIT = "FETCH_POTENTIAL_USER_BY_ID_INIT"
 export const FETCH_POTENTIAL_USER_BY_ID_SUCCESS = "FETCH_POTENTIAL_USER_BY_ID_SUCCESS";
 export const FETCH_POTENTIAL_USER_BY_ID_FAILED = "FETCH_POTENTIAL_USER_BY_ID_FAILED";
 
-export const getPotentialUserById = ( id ) => dispatch => {
+export const getPotentialUserById = ( id: string ) => dispatch => {
     
     dispatch( action( FETCH_POTENTIAL_USER_BY_ID_INIT ) );
     store.collection( "students" ).doc( id ).get().then( res => {
         if( res.exists ){
-            const userData = res.data();
+            const userData: IUser = res.data() as IUser;
             userData.id = res.id;
             dispatch( action( FETCH_POTENTIAL_USER_BY_ID_SUCCESS, userData ) );
             return;
@@ -60,7 +61,6 @@ export const LINK_POTENTIAL_USER_TO_ID_SUCCESS = "LINK_POTENTIAL_USER_TO_ID_SUCC
 export const LINK_POTENTIAL_USER_TO_ID_FAILED = "LINK_POTENTIAL_USER_TO_ID_FAILED";
 
 export const linkPotentialUserToId = ( id, potentialUser ) => dispatch => {
-    debugger;
     dispatch( action( LINK_POTENTIAL_USER_TO_ID_INIT ) );
     store.collection( "students" )
         .doc( potentialUser.id )
@@ -94,7 +94,7 @@ export const CREATE_NEW_USER_INIT = "CREATE_NEW_USER_INIT";
 export const CREATE_NEW_USER_SUCCESS = "CREATE_NEW_USER_SUCCESS";
 export const CREATE_NEW_USER_FAILED = "CREATE_NEW_USER_FAILED";
 
-export const createNewUser = ( user ) => dispatch => {
+export const createNewUser = ( user: IUser ) => dispatch => {
     
     dispatch( action( CREATE_NEW_USER_INIT ) );
     store.collection( "students" )

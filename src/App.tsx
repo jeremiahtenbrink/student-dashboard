@@ -10,29 +10,35 @@ import Dashboard from "./Views/Dashboard";
 import Retro from "./Views/Retro";
 import firebase from "./firebase";
 
-const Protected = ( { component: Component, ...rest } ) => ( <Route
-    { ...rest }
-    render={ props => cookieGet( "code" ) ? <Component { ...props } /> :
-        <Redirect to="/verify"/> }
-/> );
+interface IProps {
+    checkAuth: Function;
+    isAuthenticated: boolean;
+}
 
-class App extends React.Component{
+interface IState {
+    redirected: boolean
+}
+
+class App extends React.Component<IProps, IState> {
+    
+    private unregisterAuthObserver: firebase.Unsubscribe;
     
     state = {
         redirected: false,
     };
     
-    componentDidMount(){
+    
+    componentDidMount() {
         
         this.unregisterAuthObserver = firebase.auth()
             .onAuthStateChanged( () => this.props.checkAuth() );
     }
     
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.unregisterAuthObserver();
     }
     
-    render(){
+    render() {
         debugger;
         return ( <Switch>
             <Route exact path="/"
@@ -56,4 +62,5 @@ const mstp = state => ( {
     isAuthenticated: state.users.isAuthenticated,
 } );
 
-export default withRouter( connect( mstp, { getUserById, checkAuth } )( App ) );
+export default withRouter(
+    connect( mstp, { getUserById, checkAuth: Function } )( App ) );

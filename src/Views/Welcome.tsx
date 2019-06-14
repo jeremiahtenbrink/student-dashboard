@@ -1,20 +1,20 @@
-import React from "react";
+import React, { ChangeEvent, EventHandler, MouseEventHandler } from "react";
 import { Layout, Row, Col, Button, Input, Form, Select, Modal } from "antd";
 import { connect } from "react-redux";
 import {
     getPotentialUserById, GITHUB_PROVIDER, GOOGLE_PROVIDER, signIn,
     createNewUser, linkPotentialUserToId, clearPotentialUser
 } from "../actions";
-
 import HomeImage from "../assets/home.svg";
 import MakeInput from "../Components/MakeInput";
+import { IUser } from "../types/UserInterface";
+import { ICourse } from "../types/CourseInterface";
+import { IPms } from "../types/ProjectManagersInterface";
 
-class Welcome extends React.Component{
-    state = {
+class Welcome extends React.Component<IProps, IState>{
+    state: IState = {
         code: "",
-        error: {
-            status: "", msg: "",
-        },
+        error: "",
         modalVisible: false,
         firstName: "",
         lastName: "",
@@ -24,25 +24,25 @@ class Welcome extends React.Component{
         redirected: false,
     };
     
-    componentDidMount(){
+    componentDidMount():void {
         debugger;
     }
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
+    componentDidUpdate( prevProps, prevState, snapshot ):void {
     
     }
     
-    componentWillMount(){
+    componentWillMount():void {
         debugger;
     }
     
-    showModal = () => {
+    showModal = ():void => {
         this.setState( {
             modalVisible: true,
         } );
     };
     
-    handleOk = e => {
+    handleOk = ():void => {
         const student = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -55,7 +55,7 @@ class Welcome extends React.Component{
         this.clearState();
     };
     
-    clearState = () => {
+    clearState = ():void => {
         this.setState( {
             modalVisible: false,
             firstName: "",
@@ -66,12 +66,13 @@ class Welcome extends React.Component{
         } );
     };
     
-    handleCancel = e => {
+    handleCancel = ():void => {
         this.clearState();
     };
     
-    onChange = e => {
-        this.setState( { [ e.target.name ]: e.target.value } );
+    onChange = ( event: React.ChangeEvent<HTMLInputElement> ) => {
+        //@ts-ignore
+        this.setState( { [ event.target.name ]: event.target.value } );
     };
     
     getPotentialUser = e => {
@@ -81,18 +82,17 @@ class Welcome extends React.Component{
         
     };
     
-    initLogin = type => {
-        this.setState( {
-            isLoading: true,
-        } );
+    initLogin = (type): void => {
         this.props.signIn( type );
     };
     
-    selectChange = ( name, value ) => {
+    selectChange = ( name: string, value: any ) => {
+        //@ts-ignore
         this.setState( { [ name ]: value } );
     };
     
-    render(){
+    render() {
+        // @ts-ignore
         return (
             
             <Layout>
@@ -151,7 +151,7 @@ class Welcome extends React.Component{
                                                     this.props.potentialUser
                                                 ) }>Yes</Button>
                                             <Button
-                                                onClick={ this.props.clearPotentialUser }>No</Button>
+                                                onClick={ ( e: any ) => this.props.clearPotentialUser() }>No</Button>
                                         </> }
                                     
                                     </Col>
@@ -175,7 +175,6 @@ class Welcome extends React.Component{
                                     shape="round"
                                     type={ "primary" }
                                     icon="google"
-                                    loading={ this.props.isLoading }
                                     onClick={ () => this.initLogin(
                                         GOOGLE_PROVIDER ) }
                                     size="large">
@@ -183,7 +182,6 @@ class Welcome extends React.Component{
                                 </Button>
                                 <Button
                                     className="github-btn mg-left-sm"
-                                    loading={ this.props.isLoading }
                                     onClick={ () => this.initLogin(
                                         GITHUB_PROVIDER ) }
                                     shape="round"
@@ -222,9 +220,11 @@ class Welcome extends React.Component{
                                         this.selectChange( "course", value );
                                     } }
                                     filterOption={ ( input,
-                                        option ) => option.props.children.toLowerCase()
-                                        .indexOf( input.toLowerCase() ) >= 0 }
-                                    name={ "course" }
+                                                     option ) => typeof option.props.children ===
+                                    "string" ?
+                                        option.props.children.toLowerCase()
+                                            .indexOf( input.toLowerCase() ) >=
+                                        0 : ''}
                                 >
                                     { this.props.courses &&
                                     Object.values( this.props.courses )
@@ -247,9 +247,11 @@ class Welcome extends React.Component{
                                         this.selectChange( "pm", value );
                                     } }
                                     filterOption={ ( input,
-                                        option ) => option.props.children.toLowerCase()
-                                        .indexOf( input.toLowerCase() ) >= 0 }
-                                    name={ "course" }
+                                                     option ) => typeof option.props.children ===
+                                    "string" ?
+                                        option.props.children.toLowerCase()
+                                            .indexOf( input.toLowerCase() ) >=
+                                        0 : ''}
                                 >
                                     { this.props.pms &&
                                     Object.values( this.props.pms )
@@ -265,7 +267,7 @@ class Welcome extends React.Component{
                                        name={ "firstName" }
                                        value={ this.state.firstName }
                                        type={ "input" }
-                            />
+                             />
                             <MakeInput title={ "Last Name" }
                                        required={ true }
                                        onChange={ this.onChange }
@@ -309,3 +311,34 @@ export default connect( mstp, {
     linkPotentialUserToId,
     clearPotentialUser
 } )( Welcome );
+
+
+interface IProps {
+    getPotentialUserById: Function;
+    signIn: Function;
+    createNewUser: Function;
+    linkPotentialUserToId: Function;
+    clearPotentialUser: Function;
+    user: IUser;
+    newUser: boolean;
+    error: string;
+    potentialUser: IUser | null;
+    courses: ICourse[];
+    loadingCourses: boolean;
+    pms: IPms[];
+    gettingPMs: boolean;
+    uid: string;
+    isAuthenticated: boolean;
+}
+
+interface IState {
+    code: string
+    error: string;
+    modalVisible: boolean,
+    firstName: string,
+    lastName: string,
+    course: string,
+    pm: string,
+    github: string,
+    redirected: boolean,
+}

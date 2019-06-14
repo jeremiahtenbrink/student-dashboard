@@ -60,104 +60,111 @@ class Dashboard extends React.Component{
         }
     }
     
-    changeLessonCompleted = title => {
-        
-    };
-    
     render(){
         
-        return ( <Layout>
-            <Layout.Content
-                style={ { minHeight: "100vh", margin: "20px 10px" } }>
-                <Card
-                    style={ { maxWidth: "800px", margin: "20px auto" } }
-                    actions={ [
-                        
-                        <Popover content={ <p>Reload Joke</p> }>
-                            <Icon type="reload"
-                                  onClick={ this.getJoke }
-                                  style={ { fontSize: "24px" } }
+        return (
+            
+            <Layout>
+                <Layout.Content
+                    style={ { minHeight: "100vh", margin: "20px 10px" } }>
+                    <Card
+                        style={ { maxWidth: "800px", margin: "20px auto" } }
+                        actions={ [
+                            
+                            <Popover content={ <p>Reload Joke</p> }>
+                                <Icon type="reload"
+                                      onClick={ this.getJoke }
+                                      style={ { fontSize: "24px" } }
+                                />
+                            </Popover>,
+                            
+                            <Popover content={ <p>Go To Your Github</p> }>
+                                <Icon
+                                    type="github"
+                                    style={ { fontSize: "24px" } }
+                                    onClick={ () => {
+                                        window.open( `https://github.com/${ this.props.user.github }` );
+                                    } }
+                                />
+                            </Popover>,
+                            
+                            <Popover content={ <p>Logout</p> }>
+                                <Icon type="logout"
+                                      style={ { fontSize: "24px" } }
+                                      onClick={ () => this.logOut() }/>
+                            </Popover>
+                        ] }
+                    >
+                        <Skeleton loading={ this.props.isLoading } avatar
+                                  active>
+                            
+                            <Card.Meta
+                                avatar={ <Avatar src={ LambdaLogo }/> }
+                                title={ `Welcome ${ this.props.user &&
+                                this.props.user.firstName } ${ this.props.user &&
+                                this.props.user.lastName }` }
+                                description={ `Here is a joke: ${ this.state.joke }` }
                             />
-                        </Popover>,
-                        <Popover content={ <p>Go To Your Github</p> }><Icon
-                            type="github"
-                            style={ { fontSize: "24px" } }
-                            onClick={ () => {
+                        </Skeleton>
+                    </Card>
+                    <Row
+                        type="flex"
+                        gutter={ 24 }
+                        style={ { maxWidth: "800px", margin: "20px auto" } }
+                    >
+                        <Col xs={ 24 } md={ 12 }>
+                            <Card
+                                hoverable
+                                style={ {
+                                    width: "100%", marginBottom: "10px"
+                                } }
+                                onClick={ () => this.props.history.push(
+                                    "/retro" ) }
+                                cover={ <img
+                                    alt="Daily Retro"
+                                    src={ DailyImage }
+                                /> }
+                            >
+                                <Card.Meta
+                                    title="Daily Retro"
+                                    description="Fill out every evening"
+                                />
+                            </Card>
+                        </Col>
+                        <Col xs={ 24 } md={ 12 }>
+                            <Card
+                                hoverable
+                                style={ { width: "100%" } }
+                                onClick={ () => this.props.history.push(
+                                    "/sprint" ) }
+                                cover={ <img
+                                    alt="Sprint Form"
+                                    src={ SprintImage }
+                                /> }
+                            >
                                 
-                                window.open( `https://github.com/${ this.props.user.github }` );
-                            } }
-                        /></Popover>, <Popover content={ <p>Logout</p> }>
-                            <Icon type="logout" style={ { fontSize: "24px" } }
-                                  onClick={ () => this.logOut() }/>
-                        </Popover>
-                    ] }
-                >
-                    <Skeleton loading={ this.props.isLoading } avatar
-                              active>
-                        <Card.Meta
-                            avatar={ <Avatar src={ LambdaLogo }/> }
-                            title={ `Welcome ${ this.props.user &&
-                            this.props.user.firstName } ${ this.props.user &&
-                            this.props.user.lastName }` }
-                            description={ `Here is a joke: ${ this.state.joke }` }
-                        />
-                    </Skeleton>
-                </Card>
-                <Row
-                    type="flex"
-                    gutter={ 24 }
-                    style={ { maxWidth: "800px", margin: "20px auto" } }
-                >
-                    <Col xs={ 24 } md={ 12 }>
-                        <Card
-                            hoverable
-                            style={ {
-                                width: "100%", marginBottom: "10px"
-                            } }
-                            onClick={ () => this.props.history.push( "/retro" ) }
-                            cover={ <img
-                                alt="Daily Retro"
-                                src={ DailyImage }
-                            /> }
-                        >
-                            <Card.Meta
-                                title="Daily Retro"
-                                description="Fill out every evening"
-                            />
-                        </Card>
-                    </Col>
-                    <Col xs={ 24 } md={ 12 }>
-                        <Card
-                            hoverable
-                            style={ { width: "100%" } }
-                            onClick={ () => this.props.history.push( "/sprint" ) }
-                            cover={ <img
-                                alt="Sprint Form"
-                                src={ SprintImage }
-                            /> }
-                        >
-                            <Card.Meta
-                                title="Sprint Retro"
-                                description="Coming Soon..."
-                            />
-                        </Card>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={ { span: 24, offset: 0 } }
-                         md={ { span: 12, offset: 6 } }>
-                        { this.props.sprints &&
-                        Object.values( this.props.sprints )
-                            .sort( ( a, b ) => a.week - b.week )
-                            .sort( ( a, b ) => a.completed - b.completed )
-                            .map( sprint => {
-                                return <Sprint key={ sprint.id }
-                                               sprint={ sprint }/>;
-                            } ) }
-                    </Col>
-                </Row>
-            </Layout.Content>
-        </Layout> );
+                                <Card.Meta
+                                    title="Sprint Retro"
+                                    description="Coming Soon..."
+                                />
+                            </Card>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={ { span: 24, offset: 0 } }
+                             md={ { span: 12, offset: 6 } }>
+                            { this.props.sprints &&
+                            Object.values( this.props.sprints )
+                                .sort( ( a, b ) => a.week - b.week )
+                                .sort( ( a, b ) => a.completed - b.completed )
+                                .map( sprint => {
+                                    return <Sprint key={ sprint.id }
+                                                   sprint={ sprint }/>;
+                                } ) }
+                        </Col>
+                    </Row>
+                </Layout.Content>
+            </Layout> );
     }
 }
 
@@ -172,5 +179,4 @@ const mstp = state => ( {
 
 export default connect( mstp,
     { fetchStudentLessons, logout, subscribeToAutoFillSprints }
-)(
-    Dashboard );
+)( Dashboard );

@@ -3,8 +3,12 @@ import PropTypes from "prop-types";
 import "./lesson.scss";
 import { connect } from "react-redux";
 import { Row, Checkbox, Icon, Col, Popover } from "antd";
+import { ILesson } from "../../types/LessonInterface";
+import { IStudentLesson } from "../../types/SutdentLessons";
+import { IUser } from "../../types/UserInterface";
 
-class Lesson extends Component{
+
+class Lesson extends Component<IProps> {
     
     createLink = () => {
         
@@ -14,11 +18,11 @@ class Lesson extends Component{
         
     };
     
-    openLink( link ){
+    openLink( link ) {
         window.open( link );
     }
     
-    render(){
+    render() {
         const className = this.props.studentLessons[ this.props.lesson.id ] &&
             this.props.studentLessons[ this.props.lesson.id ].completed &&
             "complete";
@@ -35,7 +39,8 @@ class Lesson extends Component{
                                  Kit</p> }
                     >
                         <div className={ "color-lightgrey hover-blue" }
-                             onClick={ () => this.openLink( this.props.lesson.tk ) }>{ this.props.lesson.name }</div>
+                             onClick={ () => this.openLink(
+                                 this.props.lesson.tk ) }>{ this.props.lesson.name }</div>
                     </Popover>
                 </h3>
             </Col>
@@ -52,7 +57,7 @@ class Lesson extends Component{
                     { this.props.lesson.projects &&
                     this.props.lesson.projects.map( ( project, index ) => {
                         let className = " inline";
-                        if( index !== 0 ){
+                        if ( index !== 0 ) {
                             className += " mg-left-md";
                         }
                         return <Popover content={ <p>{ project }</p> }
@@ -71,14 +76,12 @@ class Lesson extends Component{
     }
 }
 
-Lesson.propTypes = {
-    lesson: PropTypes.shape( {
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        order: PropTypes.string.isRequired,
-        sprint: PropTypes.string.isRequired,
-    } ).isRequired,
-};
+
+interface IProps {
+    lesson: ILesson;
+    studentLessons: IStudentLesson[];
+    user: IUser;
+}
 
 const mstp = state => ( {
     studentLessons: state.users.studentLessons, user: state.users.user,

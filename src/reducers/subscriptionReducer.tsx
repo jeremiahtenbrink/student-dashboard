@@ -1,12 +1,17 @@
 import {
     SUBSCRIBE, UNSUBSCRIBE
 } from "../actions/index";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+interface IState {
+    subscriptions: {[name: string]: Function}
+}
+
+const initialState: IState = {
     subscriptions: {}
 };
 
-export const subscriptionReducer = ( state = initialState, action ) => {
+export const subscriptionReducer = ( state: IState = initialState, action: IAction ): IState => {
     
     switch( action.type ){
         case SUBSCRIBE:

@@ -9,7 +9,15 @@ import {
     GET_AUTOFILL_PMS_FAIL, GET_AUTOFILL_PMS_INIT, GET_AUTOFILL_PMS_SUCCESS,
 } from "../actions";
 
-const initialState = {
+import { IInstructor } from "../types/InstructorInterface";
+import { ITas } from "../types/TasInterface";
+import { ISprint } from "../types/SprintInterface";
+import { ILesson } from "../types/LessonInterface";
+import { IPms } from "../types/ProjectManagersInterface";
+import { ICourse } from "../types/CourseInterface";
+import { IAction } from "../types/ActionInterface";
+
+const initialState: IState = {
     instructors: null,
     tas: null,
     sprints: null,
@@ -32,7 +40,7 @@ const initialState = {
     getTAsFailed: false,
 };
 
-export const autofillReducer = ( state = initialState, action ) => {
+export const autofillReducer = ( state: IState = initialState, action: IAction ) => {
     switch( action.type ){
         
         //GET AUTOFILL INSTRUCTORS ------------------------------------------
@@ -191,3 +199,25 @@ export const autofillReducer = ( state = initialState, action ) => {
     }
 };
 
+interface IState {
+    instructors: null | {[id: string]: IInstructor},
+    tas: null | {[id: string]: ITas},
+    sprints: null | {[id: string]: ISprint},
+    lessons: null | {[id: string]: ILesson},
+    pms: null | {[id: string]: IPms},
+    courses: null | {[id: string]: ICourse},
+    gettingPMs: boolean,
+    gettingCourses: boolean,
+    getInstructorsInit: boolean,
+    getInstructorsSuccess: boolean,
+    getInstructorsFailed: boolean,
+    getLessonsInit: boolean,
+    getLessonsSuccess: boolean,
+    getLessonsFailed: boolean,
+    getSprintsInit: boolean,
+    getSprintsSuccess: boolean,
+    getSprintsFailed: boolean,
+    getTAsInit: boolean,
+    getTAsSuccess: boolean,
+    getTAsFailed: boolean,
+}

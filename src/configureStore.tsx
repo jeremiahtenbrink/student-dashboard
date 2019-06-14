@@ -3,11 +3,12 @@ import thunk from "redux-thunk";
 import { routerMiddleware } from "connected-react-router";
 import { createBrowserHistory } from "history";
 import createRootReducer from "./reducers";
+import {History} from "history"
 
-const composeEnhancers = ( process.env.NODE_ENV === "development" &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ) || compose;
+// @ts-ignore
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const history = createBrowserHistory();
+export const history: History = createBrowserHistory();
 
 function configureStore( preloadedState ){
     const store = createStore( createRootReducer( history ),

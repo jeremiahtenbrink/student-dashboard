@@ -8,8 +8,13 @@ import {
     CREATE_NEW_USER_SUCCESS, CREATE_NEW_USER_INIT, CLEAR_POTENTIAL_USER,
     LOGOUT_SUCCESSFUL
 } from "../actions";
+import { IUser } from "../types/UserInterface";
+import { IStudentLesson } from "../types/SutdentLessons";
+import  React from "react";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+
+const initialState: IState = {
     fetchUserInit: false,
     fetchUserSuccess: false,
     fetchUserFailed: false,
@@ -27,7 +32,7 @@ const initialState = {
     error: "",
 };
 
-export const usersReducer = ( state = initialState, action ) => {
+export const usersReducer = ( state: IState = initialState, action: IAction ): IState => {
     switch( action.type ){
         
         case LOGOUT_SUCCESSFUL:
@@ -63,7 +68,7 @@ export const usersReducer = ( state = initialState, action ) => {
                 fetchUserInit: false,
                 fetchUserSuccess: false,
                 fetchUserFailed: true,
-                user: {},
+                user: null,
                 error: action.payload,
             };
         
@@ -160,3 +165,20 @@ export const usersReducer = ( state = initialState, action ) => {
     }
 };
 
+interface IState {
+    fetchUserInit: boolean,
+    fetchUserSuccess: boolean,
+    fetchUserFailed: boolean,
+    fetchStudentLessonsInit: boolean,
+    fetchStudentLessonsSuccess: boolean,
+    fetchStudentLessonsFailed: boolean,
+    fetchingPotentialUser: boolean,
+    linkingPotentialUser: boolean,
+    creatingNewUser: boolean,
+    isAuthenticated: boolean,
+    newUser: boolean,
+    potentialUser: null | IUser,
+    user: null | IUser,
+    studentLessons: null | {[id: string] :IStudentLesson},
+    error: string,
+}

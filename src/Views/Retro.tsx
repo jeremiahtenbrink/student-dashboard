@@ -4,8 +4,11 @@ import {
 } from "antd";
 import MakeInput from "../Components/MakeInput";
 import { connect } from "react-redux";
+import { IUser } from "../types/UserInterface";
+import { ILesson } from "../types/LessonInterface";
+import { History } from "history";
 
-class Retro extends React.Component{
+class Retro extends React.Component<IProps> {
     state = {
         isSubmitting: false,
         studyToday: "",
@@ -35,10 +38,10 @@ class Retro extends React.Component{
             content: "",
             okText: "Finished",
             cancelText: "Try Again",
-            onOk(){
+            onOk() {
                 thisFunc.props.history.push( "/" );
             },
-            onCancel(){
+            onCancel() {
                 thisFunc.setState( {
                     isSubmitting: false
                 } );
@@ -47,14 +50,17 @@ class Retro extends React.Component{
     };
     
     openWindow = () => {
-        let url = `https://airtable.com/shr8ZYuNjevMLRsxI?prefill_Student=${ this.props.firstName.trim() }+${ this.props.lastName.trim() }&prefill_Module=${ encodeURI(
-            this.state.studyToday ) }&prefill_Project+Link=${ encodeURI( this.state.projectSubmittion ) }&prefill_PR+Rating=${ this.state.rateProject }&prefill_Self+Rating=${ this.state.rateDay }&prefill_Finished=${ encodeURI(
-            this.state.finishToday ) }&prefill_Need+to+Finish=${ encodeURI( this.state.finishTommorrow ) }&prefill_Blockers=${ encodeURI(
-            this.state.blockers ) }&prefill_Other=${ encodeURI( this.state.other ) }`;
+        let url = `https://airtable.com/shr8ZYuNjevMLRsxI?prefill_Student=${ this.props.user.firstName.trim() }+${ this.props.user.lastName.trim() }&prefill_Module=${ encodeURI(
+            this.state.studyToday ) }&prefill_Project+Link=${ encodeURI(
+            this.state.projectSubmittion ) }&prefill_PR+Rating=${ this.state.rateProject }&prefill_Self+Rating=${ this.state.rateDay }&prefill_Finished=${ encodeURI(
+            this.state.finishToday ) }&prefill_Need+to+Finish=${ encodeURI(
+            this.state.finishTommorrow ) }&prefill_Blockers=${ encodeURI(
+            this.state.blockers ) }&prefill_Other=${ encodeURI(
+            this.state.other ) }`;
         window.open( url );
     };
     
-    render(){
+    render() {
         return (
             
             <Layout>
@@ -113,7 +119,7 @@ class Retro extends React.Component{
                             desc="Use search to quickly find the module. Choose the one that matches the page you used in Training Kit"
                             data={ this.props.lessons &&
                             Object.values( this.props.lessons )
-                                .map( lesson => lesson ) }
+                                .map( lesson => lesson ) as [] }
                         />
                         <MakeInput
                             type="disabled"
@@ -189,7 +195,7 @@ class Retro extends React.Component{
                             value={ this.state.other }
                             name="other"
                             onChange={ this.onChange }
-                        />
+                            required={ false }/>
                         <Col xs={ 24 } style={ {
                             margin: "20px 0", textAlign: "center"
                         } }>
@@ -212,5 +218,11 @@ class Retro extends React.Component{
 const mstp = state => ( {
     user: state.users.user, lessons: state.users.lessons,
 } );
+
+interface IProps {
+    user: IUser;
+    lessons: ILesson[];
+    history: History;
+}
 
 export default connect( mstp )( Retro );

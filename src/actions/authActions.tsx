@@ -53,7 +53,6 @@ export const signIn = authType => dispatch => {
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
-                            token: result.credential.accessToken,
                         } );
                     }
                     getUserById( result.user.uid )( dispatch );
@@ -71,15 +70,10 @@ export const signIn = authType => dispatch => {
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
-                            token: result.credential.accessToken,
-                        } );
-                    }else{
-                        dispatch( {
-                            type: SIGNIN_SUCCESS,
-                            payload: result.user.uid,
-                            token: result.credential.accessToken,
                         } );
                     }
+    
+                    getUserById( result.user.uid )( dispatch );
                 } )
                 .catch( function( error ){
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );

@@ -2,8 +2,9 @@ import {
     SIGNIN_INIT, SIGNIN_SUCCESS, SIGNIN_FAILED, SIGNIN_NEW_USER, LOGOUT_INIT,
     LOGOUT_SUCCESSFUL, LOGOUT_FAILED, AUTH_INIT, AUTH_SUCCESS, AUTH_FAILED,
 } from "../actions";
+import { IAction } from "../types/ActionInterface";
 
-const initialState = {
+const initialState: IState = {
     isLoading: false,
     gettingUser: false,
     editingUser: false,
@@ -13,7 +14,7 @@ const initialState = {
     error: "",
 };
 
-export const authReducer = ( state = initialState, action ) => {
+export const authReducer = ( state: IState = initialState, action: IAction ):IState => {
     switch( action.type ){
         case AUTH_INIT:
             return { ...state, isLoading: true };
@@ -32,14 +33,13 @@ export const authReducer = ( state = initialState, action ) => {
         case SIGNIN_NEW_USER:
             
             return {
-                ...state, newUser: true, uid: action.payload, isLoading: false,
+                ...state,  uid: action.payload, isLoading: false,
             };
         case SIGNIN_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
                 uid: action.payload,
-                token: action.token,
             };
         case SIGNIN_FAILED:
             return { ...state, error: action.payload };
@@ -51,8 +51,6 @@ export const authReducer = ( state = initialState, action ) => {
                 ...state,
                 isLoading: false,
                 uid: null,
-                user: null,
-                newUser: false,
                 token: "",
                 error: "",
             };
@@ -63,3 +61,13 @@ export const authReducer = ( state = initialState, action ) => {
             return state;
     }
 };
+
+interface IState {
+    isLoading: boolean,
+    gettingUser: boolean,
+    editingUser: boolean,
+    uid: null | string,
+    displayName: null | string,
+    token: string,
+    error: string,
+}

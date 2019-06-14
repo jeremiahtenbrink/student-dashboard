@@ -3,8 +3,16 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Icon, Row, Col, Popover, Table, Button, Divider } from "antd";
 import Lesson from "./Lesson";
+import { ISprint } from "../../types/SprintInterface";
+import { ILesson } from "../../types/LessonInterface";
+import { IStudentLesson } from "../../types/SutdentLessons";
 
-class Sprint extends Component{
+
+interface IState {
+    open: boolean;
+}
+
+class Sprint extends Component<IProps, IState>{
     
     state = {
         open: false
@@ -77,13 +85,12 @@ class Sprint extends Component{
     }
 }
 
-Sprint.propTypes = {
-    sprint: PropTypes.shape( {
-        name: PropTypes.string.isRequired,
-        id: PropTypes.string.isRequired,
-        week: PropTypes.string.isRequired,
-    } ).isRequired,
-};
+
+interface IProps {
+    sprint: ISprint;
+    lessons: {[id: string]: ILesson};
+    studentLessons: {[id: string]: IStudentLesson}
+}
 
 const mstp = state => ( {
     lessons: state.autoFill.lessons, studentLessons: state.users.studentLessons,

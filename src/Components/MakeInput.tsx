@@ -1,46 +1,62 @@
-import React, { useState } from "react";
-import { Col, Skeleton, Input, Rate, AutoComplete, Form } from "antd";
+import React, { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { Col, Skeleton, Input, AutoComplete, Form, Rate } from "antd";
 
-const MakeInput = ( {
-    type, title, desc, required, isLoading, value, data, onChange, name
-} ) => {
+interface IProps {
+    type: string;
+    title: string;
+    required: boolean;
+    isLoading?: boolean;
+    value: string | number;
+    data?: [];
+    onChange?: ( value: any ) => any;
+    name?: string;
+    desc?: string;
+}
+
+const MakeInput: React.FunctionComponent<IProps> = ( {
+                                                         type, title, desc, required, isLoading, value, data, onChange, name
+                                                     }: IProps ) => {
     let [ valStatus, setStatus ] = useState( "" );
     const validate = type => {
-        if( required ){
-            if( type === "url" ){
+        if ( required ) {
+            if ( type === "url" ) {
                 var pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-                if( pattern.test( value ) ){
+                if ( pattern.test( value as string ) ) {
                     setStatus( "success" );
-                }else{
+                } else {
                     setStatus( "error" );
                 }
-            }else{
-                if( value !== "" ){
+            } else {
+                if ( value !== "" ) {
                     setStatus( "success" );
-                }else{
+                } else {
                     setStatus( "error" );
                 }
             }
         }
     };
     
-    if( type === "rate" && !isLoading ){
+    if ( type === "rate" && !isLoading ) {
+        
+        // @ts-ignore
         return ( <Col xs={ 24 } style={ { margin: "20px 0" } }>
             <h3>
                 { required &&
                 <span style={ { color: "#f5222d" } }>*</span> } { title }
             </h3>
             <p>{ desc }</p>
+            {/*
+            //@ts-ignore*/ }
             <Rate
                 count={ 3 }
                 allowClear={ false }
-                value={ value }
+                value={ value as number }
                 onChange={ onChange }
                 name={ name }
             />
         </Col> );
     }
-    if( type === "input" && !isLoading ){
+    if ( type === "input" && !isLoading ) {
         return ( <Col xs={ 24 } style={ { margin: "20px 0" } }>
             <h3>
                 { required &&
@@ -63,7 +79,7 @@ const MakeInput = ( {
             </Form.Item>
         </Col> );
     }
-    if( type === "textarea" && !isLoading ){
+    if ( type === "textarea" && !isLoading ) {
         return ( <Col xs={ 24 } style={ { margin: "20px 0" } }>
             <h3>
                 { required &&
@@ -87,7 +103,7 @@ const MakeInput = ( {
             </Form.Item>
         </Col> );
     }
-    if( type === "suggest" && !isLoading ){
+    if ( type === "suggest" && !isLoading ) {
         
         return ( <Col xs={ 24 } style={ { margin: "20px 0" } }>
             <h3>
@@ -108,14 +124,15 @@ const MakeInput = ( {
                     onChange={ onChange }
                     onBlur={ () => validate( "text" ) }
                     filterOption={ ( inputValue,
-                        option ) => option.props.children
+                                     option ) => typeof option.props.children ===
+                    "string" ? option.props.children
                         .toUpperCase()
-                        .indexOf( inputValue.toUpperCase() ) !== -1 }
+                        .indexOf( inputValue.toUpperCase() ) !== -1 : "" }
                 />
             </Form.Item>
         </Col> );
     }
-    if( type === "disabled" && !isLoading ){
+    if ( type === "disabled" && !isLoading ) {
         return ( <Col xs={ 24 } style={ { margin: "20px 0" } }>
             <h3>
                 { required &&

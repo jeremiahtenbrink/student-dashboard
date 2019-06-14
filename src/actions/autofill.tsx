@@ -1,8 +1,14 @@
 import { store } from "../firebase";
 import { action } from "./action";
+import { IInstructor } from "../types/InstructorInterface";
+import { IUser } from "../types/UserInterface";
+import { ISprint } from "../types/SprintInterface";
+import { ILesson } from "../types/LessonInterface";
+import { ITas } from "../types/TasInterface";
+import { IPms } from "../types/ProjectManagersInterface";
+import { ICourse } from "../types/CourseInterface";
 
 export const getAutoFillInit = () => dispatch => {
-    
     getAutoFillInstructors()( dispatch );
     getAutoFillTas()( dispatch );
     getAutoFillCourses()( dispatch );
@@ -19,9 +25,9 @@ export const getAutoFillInstructors = () => dispatch => {
         .get()
         .then( res => {
             if( !res.empty ){
-                const instructors = {};
+                const instructors: {[id: string]: IInstructor} = {};
                 res.docs.forEach( instructor => {
-                    const data = instructor.data();
+                    const data: IInstructor = instructor.data() as IInstructor;
                     data.id = instructor.id;
                     instructors[ data.id ] = data;
                 } );
@@ -44,7 +50,7 @@ export const GET_AUTOFILL_SPRINTS_INIT = "GET_AUTOFILL_SPRINTS_INIT";
 export const GET_AUTOFILL_SPRINTS_SUCCESS = "GET_AUTOFILL_SPRINTS_SUCCESS";
 export const GET_AUTOFILL_SPRINTS_FAIL = "GET_AUTOFILL_SPRINTS_FAIL";
 
-export const subscribeToAutoFillSprints = ( user ) => dispatch => {
+export const subscribeToAutoFillSprints = ( user: IUser ) => dispatch => {
     
     if( !user.course ){
         return;
@@ -58,9 +64,9 @@ export const subscribeToAutoFillSprints = ( user ) => dispatch => {
         .onSnapshot( snapshot => {
             
             if( !snapshot.empty ){
-                const sprints = {};
+                const sprints: {[id: string]: ISprint} = {};
                 snapshot.docs.forEach( sprint => {
-                    const data = sprint.data();
+                    const data = sprint.data() as ISprint;
                     data.id = sprint.id;
                     data.course = user.course;
                     sprints[ data.id ] = data;
@@ -84,7 +90,7 @@ export const GET_AUTOFILL_LESSONS_INIT = "GET_AUTOFILL_LESSONS_INIT";
 export const GET_AUTOFILL_LESSONS_SUCCESS = "GET_AUTOFILL_LESSONS_SUCCESS";
 export const GET_AUTOFILL_LESSONS_FAIL = "GET_AUTOFILL_LESSONS_FAIL";
 
-export const getAutoFillLessonsForSprint = sprint => dispatch => {
+export const getAutoFillLessonsForSprint = (sprint: ISprint) => dispatch => {
     
     dispatch( action( GET_AUTOFILL_LESSONS_INIT ) );
     store.collection( "autoFill" )
@@ -98,9 +104,9 @@ export const getAutoFillLessonsForSprint = sprint => dispatch => {
         .then( res => {
             debugger;
             if( !res.empty ){
-                const lessons = {};
+                const lessons: {[id: string]: ILesson} = {};
                 res.docs.forEach( lesson => {
-                    const data = lesson.data();
+                    const data = lesson.data() as ILesson;
                     data.id = lesson.id;
                     lessons[ data.id ] = data;
                 } );
@@ -128,9 +134,9 @@ export const getAutoFillTas = () => dispatch => {
         .get()
         .then( res => {
             if( !res.empty ){
-                const tas = {};
+                const tas: {[id: string]: ITas} = {};
                 res.docs.forEach( ta => {
-                    const data = ta.data();
+                    const data = ta.data() as ITas;
                     data.id = ta.id;
                     tas[ data.id ] = data;
                 } );
@@ -156,9 +162,9 @@ export const getAutoFillPMS = () => dispatch => {
         .get()
         .then( res => {
             if( !res.empty ){
-                const pms = {};
+                const pms: {[id: string]: IPms} = {};
                 res.docs.forEach( pm => {
-                    const data = pm.data();
+                    const data = pm.data() as IPms;
                     data.id = pm.id;
                     pms[ data.id ] = data;
                 } );
@@ -186,9 +192,9 @@ export const getAutoFillCourses = () => dispatch => {
         .get()
         .then( res => {
             if( !res.empty ){
-                const courses = {};
+                const courses: {[id: string]: ICourse} = {};
                 res.docs.forEach( course => {
-                    const data = course.data();
+                    const data = course.data() as ICourse;
                     data.id = course.id;
                     courses[ data.id ] = data;
                 } );
