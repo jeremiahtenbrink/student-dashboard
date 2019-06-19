@@ -70,7 +70,7 @@ export const linkPotentialUserToId = ( id, potentialUser ) => dispatch => {
         .delete()
         .then( res => {
             console.log( "Removed potential user." );
-            
+            debugger;
             store.collection( "students" )
                 .doc( id )
                 .set( potentialUser )

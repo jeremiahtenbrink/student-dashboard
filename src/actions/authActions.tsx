@@ -15,18 +15,18 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
-    
+    debugger;
     dispatch( { type: AUTH_INIT } );
     const { currentUser } = firebase.auth();
     
-    if( currentUser ){
+    if ( currentUser ) {
         getUserById( currentUser.uid )( dispatch );
         getAutoFillInit()( dispatch );
         getUserById( currentUser.uid );
         dispatch( {
             type: AUTH_SUCCESS, payload: currentUser,
         } );
-    }else{
+    } else {
         
         dispatch( { type: AUTH_FAILED } );
         dispatch( push( "/" ) );
@@ -40,28 +40,28 @@ export const SIGNIN_FAILED = "SIGNIN_FAILED";
 export const NEW_USER = "NEW_USER";
 
 export const signIn = authType => dispatch => {
-    
+    debugger;
     dispatch( { type: SIGNIN_INIT } );
-    switch( authType ){
+    switch ( authType ) {
         case GOOGLE_PROVIDER:
             firebase
                 .auth()
                 .signInWithPopup( googleProvider )
-                .then( function( result ){
+                .then( function ( result ) {
                     
-                    if( result.additionalUserInfo.isNewUser ){
+                    if ( result.additionalUserInfo.isNewUser ) {
                         
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
                         } );
-                    }else {
-                        dispatch(action(SIGNIN_SUCCESS, result.user.uid))
+                    } else {
+                        dispatch( action( SIGNIN_SUCCESS, result.user.uid ) )
                     }
                     
                     getUserById( result.user.uid )( dispatch );
                 } )
-                .catch( function( error ){
+                .catch( function ( error ) {
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );
                 } );
             return;
@@ -69,19 +69,19 @@ export const signIn = authType => dispatch => {
             firebase
                 .auth()
                 .signInWithPopup( githubProvider )
-                .then( function( result ){
-                    if( result.additionalUserInfo.isNewUser ){
+                .then( function ( result ) {
+                    if ( result.additionalUserInfo.isNewUser ) {
                         dispatch( {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
                         } );
-                    }else {
-                        dispatch(action(SIGNIN_SUCCESS, result.user.uid))
+                    } else {
+                        dispatch( action( SIGNIN_SUCCESS, result.user.uid ) )
                     }
-    
+                    
                     getUserById( result.user.uid )( dispatch );
                 } )
-                .catch( function( error ){
+                .catch( function ( error ) {
                     dispatch( { type: SIGNIN_FAILED, payload: error.message } );
                 } );
             return;

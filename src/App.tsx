@@ -28,7 +28,7 @@ class App extends React.Component<IProps, IState> {
     
     
     componentDidMount() {
-        
+        debugger;
         this.unregisterAuthObserver = firebase.auth()
             .onAuthStateChanged( () => this.props.checkAuth() );
     }

@@ -10,7 +10,7 @@ import {
 } from "../actions";
 import { IUser } from "../types/UserInterface";
 import { IStudentLesson } from "../types/SutdentLessons";
-import  React from "react";
+import React from "react";
 import { IAction } from "../types/ActionInterface";
 
 
@@ -32,8 +32,9 @@ const initialState: IState = {
     error: "",
 };
 
-export const usersReducer = ( state: IState = initialState, action: IAction ): IState => {
-    switch( action.type ){
+export const usersReducer = ( state: IState = initialState,
+                              action: IAction ): IState => {
+    switch ( action.type ) {
         
         case LOGOUT_SUCCESSFUL:
             return { ...state, potentialUser: null, newUser: false };
@@ -139,6 +140,7 @@ export const usersReducer = ( state: IState = initialState, action: IAction ): I
                 linkingPotentialUser: false,
                 user: action.payload,
                 potentialUser: null,
+                isAuthenticated: true,
             };
         case LINK_POTENTIAL_USER_TO_ID_FAILED:
             return {
@@ -179,6 +181,6 @@ interface IState {
     newUser: boolean,
     potentialUser: null | IUser,
     user: null | IUser,
-    studentLessons: null | {[id: string] :IStudentLesson},
+    studentLessons: null | { [ id: string ]: IStudentLesson },
     error: string,
 }

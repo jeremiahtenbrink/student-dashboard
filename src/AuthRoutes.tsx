@@ -1,5 +1,5 @@
 import React from "react";
-import {History} from "history";
+import { History } from "history";
 
 interface AuthenticateProps {
     isAuthenticated: boolean,
@@ -8,7 +8,7 @@ interface AuthenticateProps {
 
 export default function <P extends object>( Component: React.ComponentType<P>,
                                             isAuthenticated: boolean ) {
-    class Authenticate extends React.Component<P & AuthenticateProps>  {
+    class Authenticate extends React.Component<P & AuthenticateProps> {
         
         componentDidMount() {
             
@@ -21,7 +21,7 @@ export default function <P extends object>( Component: React.ComponentType<P>,
         }
         
         checkAndRedirect() {
-            
+            debugger;
             if ( !isAuthenticated ) {
                 this.props.history.push( "/" );
             }
