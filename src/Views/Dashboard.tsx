@@ -5,7 +5,7 @@ import LambdaLogo from "../assets/logo.png";
 import { History } from 'history'
 import {
     subscribeToStudentLessons, logout, subscribeToAutoFillSprints, subscribe,
-    unsubscribe
+    unsubscribe, getAutoFillCourses
 } from "../actions/index";
 import DailyImage from "../assets/daily.jpg";
 import SprintImage from "../assets/sprint.jpg";
@@ -14,6 +14,7 @@ import Sprint from "../Components/sprint/Sprint";
 import { IUser } from "../types/UserInterface";
 import { ISprint } from "../types/SprintInterface";
 import { IStudentLesson } from "../types/SutdentLessons";
+import { ICourse } from "../types/CourseInterface";
 
 interface IState {
     joke: string,
@@ -28,6 +29,7 @@ class Dashboard extends React.Component<IProps, IState> {
     componentDidMount(): void {
         
         this.getJoke();
+        this.props.getAutoFillCourses();
         if ( this.props.user ) {
             
             if ( !this.props.gettingSprints &&
@@ -116,9 +118,14 @@ class Dashboard extends React.Component<IProps, IState> {
                             
                             <Card.Meta
                                 avatar={ <Avatar src={ LambdaLogo }/> }
-                                title={ `Welcome ${ this.props.user &&
-                                this.props.user.firstName } ${ this.props.user &&
-                                this.props.user.lastName }` }
+                                title={ <div><p>Welcome { this.props.user &&
+                                this.props.user.firstName } { this.props.user &&
+                                this.props.user.lastName }</p>
+                                    <p> { this.props.user &&
+                                    this.props.user.course &&
+                                    this.props.courses &&
+                                    this.props.courses[ this.props.user.course ].courseName } </p>
+                                </div> }
                                 description={ `Here is a joke: ${ this.state.joke }` }
                             />
                         </Skeleton>
@@ -199,6 +206,7 @@ const mstp = state => ( {
     studentLessons: state.users.studentLessons,
     gettingSprints: state.autoFill.getSprintsInit,
     gettingSprintsSuccess: state.autoFill.getSprintsSuccess,
+    courses: state.autoFill.courses,
 } );
 
 interface IProps {
@@ -214,11 +222,13 @@ interface IProps {
     subscribeToAutoFillSprints: Function;
     subscribe: Function;
     unsubscribe: Function;
+    getAutoFillCourses: Function;
+    courses: { [ id: string ]: ICourse }
 }
 
 export default connect( mstp,
     {
         subscribeToStudentLessons, logout,
-        subscribeToAutoFillSprints, subscribe, unsubscribe
+        subscribeToAutoFillSprints, subscribe, unsubscribe, getAutoFillCourses
     }
 )( Dashboard );
