@@ -8,9 +8,8 @@ import {
     GET_AUTOFILL_COURSES_INIT, GET_AUTOFILL_COURSES_SUCCESS,
     GET_AUTOFILL_PMS_FAIL, GET_AUTOFILL_PMS_INIT, GET_AUTOFILL_PMS_SUCCESS,
 } from "../actions";
-
 import { IInstructor } from "../types/InstructorInterface";
-import { ITas } from "../types/TasInterface";
+import { ITa } from "../types/TasInterface";
 import { ISprint } from "../types/SprintInterface";
 import { ILesson } from "../types/LessonInterface";
 import { IPms } from "../types/ProjectManagersInterface";
@@ -201,7 +200,7 @@ export const autofillReducer = ( state: IState = initialState, action: IAction )
 
 interface IState {
     instructors: null | {[id: string]: IInstructor},
-    tas: null | {[id: string]: ITas},
+    tas: null | {[id: string]: ITa},
     sprints: null | {[id: string]: ISprint},
     lessons: null | {[id: string]: ILesson},
     pms: null | {[id: string]: IPms},

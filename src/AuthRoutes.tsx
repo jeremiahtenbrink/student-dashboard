@@ -21,7 +21,7 @@ export default function <P extends object>( Component: React.ComponentType<P>,
         }
         
         checkAndRedirect() {
-            debugger;
+            
             if ( !isAuthenticated ) {
                 this.props.history.push( "/" );
             }

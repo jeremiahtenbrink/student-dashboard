@@ -2,34 +2,49 @@ import React from "react";
 import { Layout, Row, Col, Card, Icon, Skeleton, Avatar, Popover } from "antd";
 import { connect } from "react-redux";
 import LambdaLogo from "../assets/logo.png";
+import { History } from 'history'
 import {
-    fetchStudentLessons, logout, subscribeToAutoFillSprints,
+    subscribeToStudentLessons, logout, subscribeToAutoFillSprints, subscribe,
+    unsubscribe
 } from "../actions/index";
 import DailyImage from "../assets/daily.jpg";
 import SprintImage from "../assets/sprint.jpg";
 import axios from "axios";
 import Sprint from "../Components/sprint/Sprint";
+import { IUser } from "../types/UserInterface";
+import { ISprint } from "../types/SprintInterface";
+import { IStudentLesson } from "../types/SutdentLessons";
 
-class Dashboard extends React.Component{
+interface IState {
+    joke: string,
+    updatedSprints: boolean
+}
+
+class Dashboard extends React.Component<IProps, IState> {
     state = {
         joke: "", updatedSprints: false,
     };
     
-    componentDidMount(){
-        debugger;
+    componentDidMount(): void {
+        
         this.getJoke();
-        if( this.props.user ){
+        if ( this.props.user ) {
             
-            if( !this.props.gettingSprints &&
-                !this.props.gettingSprintsSuccess ){
-                this.props.subscribeToAutoFillSprints( this.props.user );
+            if ( !this.props.gettingSprints &&
+                !this.props.gettingSprintsSuccess ) {
+                this.props.subscribe( "AutoFill",
+                    this.props.subscribeToAutoFillSprints( this.props.user ) );
             }
-            this.props.fetchStudentLessons( this.props.user );
+            this.props.subscribe( "StudentLessons",
+                this.props.subscribeToStudentLessons( this.props.user ) );
+            
         }
     }
     
-    componentWillUnmount(){
-        debugger;
+    componentWillUnmount() {
+        
+        this.props.unsubscribe( "AutoFill" );
+        this.props.unsubscribe( "StudentLessons" );
     }
     
     logOut = () => {
@@ -44,23 +59,23 @@ class Dashboard extends React.Component{
         } ).then( joke => this.setState( { joke: joke.data.joke } ) ).catch();
     };
     
-    componentDidUpdate( prevProps, prevState, snapshot ){
+    componentDidUpdate( prevProps, prevState, snapshot ) {
         
-        if( !this.state.updatedSprints && this.props.studentLessons &&
-            this.props.sprints ){
+        if ( !this.state.updatedSprints && this.props.studentLessons &&
+            this.props.sprints ) {
             this.setState( { updatedSprints: true } );
             Object.values( this.props.sprints ).forEach( sprint => {
-                if( this.props.studentLessons[ sprint.id ] &&
-                    this.props.studentLessons[ sprint.id ].completed ){
+                if ( this.props.studentLessons[ sprint.id ] &&
+                    this.props.studentLessons[ sprint.id ].completed ) {
                     sprint.completed = true;
-                }else{
+                } else {
                     sprint.completed = false;
                 }
             } );
         }
     }
     
-    render(){
+    render() {
         
         return (
             
@@ -83,7 +98,8 @@ class Dashboard extends React.Component{
                                     type="github"
                                     style={ { fontSize: "24px" } }
                                     onClick={ () => {
-                                        window.open( `https://github.com/${ this.props.user.github }` );
+                                        window.open(
+                                            `https://github.com/${ this.props.user.github }` );
                                     } }
                                 />
                             </Popover>,
@@ -156,7 +172,15 @@ class Dashboard extends React.Component{
                             { this.props.sprints &&
                             Object.values( this.props.sprints )
                                 .sort( ( a, b ) => a.week - b.week )
-                                .sort( ( a, b ) => a.completed - b.completed )
+                                .sort( ( a, b ) => {
+                                    if ( a.completed === b.completed ) {
+                                        return 0;
+                                    } else if ( a.completed ) {
+                                        return 1;
+                                    } else {
+                                        return -1;
+                                    }
+                                } )
                                 .map( sprint => {
                                     return <Sprint key={ sprint.id }
                                                    sprint={ sprint }/>;
@@ -177,6 +201,24 @@ const mstp = state => ( {
     gettingSprintsSuccess: state.autoFill.getSprintsSuccess,
 } );
 
+interface IProps {
+    isLoading: boolean,
+    user: IUser,
+    sprints: { [ id: string ]: ISprint },
+    studentLessons: { [ id: string ]: IStudentLesson },
+    gettingSprints: boolean
+    gettingSprintsSuccess: boolean,
+    history: History;
+    logout: Function;
+    subscribeToStudentLessons: Function;
+    subscribeToAutoFillSprints: Function;
+    subscribe: Function;
+    unsubscribe: Function;
+}
+
 export default connect( mstp,
-    { fetchStudentLessons, logout, subscribeToAutoFillSprints }
+    {
+        subscribeToStudentLessons, logout,
+        subscribeToAutoFillSprints, subscribe, unsubscribe
+    }
 )( Dashboard );

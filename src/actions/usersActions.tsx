@@ -8,19 +8,22 @@ export const FETCH_USER_BY_ID_INIT = "FETCH_USER_BY_ID_INIT";
 export const FETCH_USER_BY_ID_SUCCESS = "FETCH_USER_BY_ID_SUCCESS";
 export const FETCH_USER_BY_ID_FAILED = "FETCH_USER_BY_ID_FAILED";
 
-export const getUserById = (id: string) => dispatch => {
-    debugger;
+export const getUserById = ( id: string ) => dispatch => {
+    
     dispatch( action( FETCH_USER_BY_ID_INIT ) );
     store.collection( "students" )
         .doc( id )
         .get()
         .then( res => {
-            if( res.exists ){
+            if ( res.exists ) {
                 const data = res.data();
                 data.id = res.id;
+                if ( !data.course ) {
+                    data.course = "FSW";
+                }
                 dispatch( action( FETCH_USER_BY_ID_SUCCESS, data ) );
                 dispatch( push( "/dashboard" ) );
-            }else{
+            } else {
                 dispatch( action( NEW_USER ) );
             }
         } )
@@ -36,7 +39,7 @@ export const getPotentialUserById = ( id: string ) => dispatch => {
     
     dispatch( action( FETCH_POTENTIAL_USER_BY_ID_INIT ) );
     store.collection( "students" ).doc( id ).get().then( res => {
-        if( res.exists ){
+        if ( res.exists ) {
             const userData: IUser = res.data() as IUser;
             userData.id = res.id;
             dispatch( action( FETCH_POTENTIAL_USER_BY_ID_SUCCESS, userData ) );

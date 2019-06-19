@@ -1,20 +1,37 @@
-import React, { ChangeEvent, EventHandler, MouseEventHandler } from "react";
+import React from "react";
 import { Layout, Row, Col, Button, Input, Form, Select, Modal } from "antd";
 import { connect } from "react-redux";
 import {
     getPotentialUserById, GITHUB_PROVIDER, GOOGLE_PROVIDER, signIn,
-    createNewUser, linkPotentialUserToId, clearPotentialUser
-} from "../actions";
+    createNewUser, linkPotentialUserToId, clearPotentialUser, getAutoFillPMS,
+    getAutoFillCourses
+} from "../actions/index";
 import HomeImage from "../assets/home.svg";
 import MakeInput from "../Components/MakeInput";
 import { IUser } from "../types/UserInterface";
 import { ICourse } from "../types/CourseInterface";
 import { IPms } from "../types/ProjectManagersInterface";
+import { history } from "../configureStore";
 
-class Welcome extends React.Component<IProps, IState>{
+interface IState {
+    code: string
+    error: string;
+    modalError: string;
+    modalVisible: boolean,
+    firstName: string,
+    lastName: string,
+    course: string,
+    pm: string,
+    github: string,
+    redirected: boolean,
+    subscribedToAutoFill: boolean,
+}
+
+class Welcome extends React.Component<IProps, IState> {
     state: IState = {
         code: "",
         error: "",
+        modalError: '',
         modalVisible: false,
         firstName: "",
         lastName: "",
@@ -22,27 +39,45 @@ class Welcome extends React.Component<IProps, IState>{
         pm: "",
         github: "",
         redirected: false,
+        subscribedToAutoFill: false,
     };
     
-    componentDidMount():void {
-        debugger;
-    }
-    
-    componentDidUpdate( prevProps, prevState, snapshot ):void {
+    componentDidMount(): void {
     
     }
     
-    componentWillMount():void {
-        debugger;
+    componentDidUpdate( prevProps, prevState, snapshot ): void {
+        if ( this.props.newUser && !this.state.subscribedToAutoFill ) {
+            this.props.getAutoFillPMS();
+            this.props.getAutoFillCourses();
+            this.setState(
+                state => ( { ...state, subscribedToAutoFill: true } ) )
+        }
     }
     
-    showModal = ():void => {
+    componentWillMount(): void {
+    
+    }
+    
+    showModal = (): void => {
         this.setState( {
             modalVisible: true,
         } );
     };
     
-    handleOk = ():void => {
+    handleOk = (): void => {
+        
+        if ( this.state.firstName === '' ) {
+            this.setState( { modalError: "Please enter your first name." } );
+            return;
+        } else if ( this.state.lastName === "" ) {
+            this.setState( { modalError: "Please enter your last name." } );
+            return;
+        } else if ( this.state.course === "" ) {
+            this.setState( { modalError: "You must select a course." } );
+            return;
+        }
+        
         const student = {
             firstName: this.state.firstName,
             lastName: this.state.lastName,
@@ -51,11 +86,14 @@ class Welcome extends React.Component<IProps, IState>{
             pm: this.state.pm,
             course: this.state.course,
         };
+        
+        
         this.props.createNewUser( student );
         this.clearState();
+        this.props.history.push( "/dashboard" );
     };
     
-    clearState = ():void => {
+    clearState = (): void => {
         this.setState( {
             modalVisible: false,
             firstName: "",
@@ -63,10 +101,11 @@ class Welcome extends React.Component<IProps, IState>{
             github: "",
             pm: "",
             course: "",
+            modalError: '',
         } );
     };
     
-    handleCancel = ():void => {
+    handleCancel = (): void => {
         this.clearState();
     };
     
@@ -82,7 +121,7 @@ class Welcome extends React.Component<IProps, IState>{
         
     };
     
-    initLogin = (type): void => {
+    initLogin = ( type ): void => {
         this.props.signIn( type );
     };
     
@@ -224,7 +263,7 @@ class Welcome extends React.Component<IProps, IState>{
                                     "string" ?
                                         option.props.children.toLowerCase()
                                             .indexOf( input.toLowerCase() ) >=
-                                        0 : ''}
+                                        0 : '' }
                                 >
                                     { this.props.courses &&
                                     Object.values( this.props.courses )
@@ -236,7 +275,7 @@ class Welcome extends React.Component<IProps, IState>{
                                 </Select>
                             </Form.Item>
                             <Form.Item label={ "Project Manager" }
-                                       required={ true }>
+                                       required={ false }>
                                 <Select
                                     showSearch
                                     style={ { width: 200 } }
@@ -251,7 +290,7 @@ class Welcome extends React.Component<IProps, IState>{
                                     "string" ?
                                         option.props.children.toLowerCase()
                                             .indexOf( input.toLowerCase() ) >=
-                                        0 : ''}
+                                        0 : '' }
                                 >
                                     { this.props.pms &&
                                     Object.values( this.props.pms )
@@ -267,7 +306,7 @@ class Welcome extends React.Component<IProps, IState>{
                                        name={ "firstName" }
                                        value={ this.state.firstName }
                                        type={ "input" }
-                             />
+                            />
                             <MakeInput title={ "Last Name" }
                                        required={ true }
                                        onChange={ this.onChange }
@@ -282,8 +321,9 @@ class Welcome extends React.Component<IProps, IState>{
                                        value={ this.state.github }
                                        type={ "input" }
                             />
-                        
-                        
+                            
+                            { this.state.modalError !== '' &&
+                            <h3 className={ "color-red" }>{ this.state.modalError }</h3> }
                         </Form>
                     </Modal>
                 </Layout.Content>
@@ -309,7 +349,9 @@ export default connect( mstp, {
     signIn,
     createNewUser,
     linkPotentialUserToId,
-    clearPotentialUser
+    clearPotentialUser,
+    getAutoFillPMS,
+    getAutoFillCourses
 } )( Welcome );
 
 
@@ -329,16 +371,8 @@ interface IProps {
     gettingPMs: boolean;
     uid: string;
     isAuthenticated: boolean;
+    getAutoFillPMS: Function,
+    getAutoFillCourses: Function,
+    history: typeof history,
 }
 
-interface IState {
-    code: string
-    error: string;
-    modalVisible: boolean,
-    firstName: string,
-    lastName: string,
-    course: string,
-    pm: string,
-    github: string,
-    redirected: boolean,
-}

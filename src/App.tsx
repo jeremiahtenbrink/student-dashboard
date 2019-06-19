@@ -1,9 +1,8 @@
 import React from "react";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
-import { cookieGet } from "./actions/cookie";
 import { connect } from "react-redux";
 import Welcome from "./Views/Welcome";
-import { getUserById, checkAuth } from "./actions";
+import { checkAuth } from "./actions";
 import "./App.scss";
 import requireAuth from "./AuthRoutes";
 import Dashboard from "./Views/Dashboard";
@@ -39,7 +38,7 @@ class App extends React.Component<IProps, IState> {
     }
     
     render() {
-        debugger;
+        
         return ( <Switch>
             <Route exact path="/"
                    render={ props => <Welcome { ...props } /> }
@@ -62,5 +61,6 @@ const mstp = state => ( {
     isAuthenticated: state.users.isAuthenticated,
 } );
 
+
 export default withRouter(
-    connect( mstp, { getUserById, checkAuth: Function } )( App ) );
+    connect( mstp, { checkAuth: Function } )( App ) );

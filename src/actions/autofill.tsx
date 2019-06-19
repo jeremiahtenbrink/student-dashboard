@@ -4,7 +4,7 @@ import { IInstructor } from "../types/InstructorInterface";
 import { IUser } from "../types/UserInterface";
 import { ISprint } from "../types/SprintInterface";
 import { ILesson } from "../types/LessonInterface";
-import { ITas } from "../types/TasInterface";
+import { ITa } from "../types/TasInterface";
 import { IPms } from "../types/ProjectManagersInterface";
 import { ICourse } from "../types/CourseInterface";
 
@@ -24,8 +24,8 @@ export const getAutoFillInstructors = () => dispatch => {
     store.collection( "autoFill" ).doc( "web" ).collection( "instructors" )
         .get()
         .then( res => {
-            if( !res.empty ){
-                const instructors: {[id: string]: IInstructor} = {};
+            if ( !res.empty ) {
+                const instructors: { [ id: string ]: IInstructor } = {};
                 res.docs.forEach( instructor => {
                     const data: IInstructor = instructor.data() as IInstructor;
                     data.id = instructor.id;
@@ -35,7 +35,7 @@ export const getAutoFillInstructors = () => dispatch => {
                 dispatch( action( GET_AUTOFILL_INSTRUCTORS_SUCCESS,
                     instructors
                 ) );
-            }else{
+            } else {
                 dispatch( action( GET_AUTOFILL_INSTRUCTORS_FAIL,
                     "Error, unable to get autofill data for instructors."
                 ) );
@@ -52,7 +52,7 @@ export const GET_AUTOFILL_SPRINTS_FAIL = "GET_AUTOFILL_SPRINTS_FAIL";
 
 export const subscribeToAutoFillSprints = ( user: IUser ) => dispatch => {
     
-    if( !user.course ){
+    if ( !user.course ) {
         return;
     }
     dispatch( action( GET_AUTOFILL_SPRINTS_INIT ) );
@@ -63,8 +63,8 @@ export const subscribeToAutoFillSprints = ( user: IUser ) => dispatch => {
         .collection( "sprints" )
         .onSnapshot( snapshot => {
             
-            if( !snapshot.empty ){
-                const sprints: {[id: string]: ISprint} = {};
+            if ( !snapshot.empty ) {
+                const sprints: { [ id: string ]: ISprint } = {};
                 snapshot.docs.forEach( sprint => {
                     const data = sprint.data() as ISprint;
                     data.id = sprint.id;
@@ -75,7 +75,7 @@ export const subscribeToAutoFillSprints = ( user: IUser ) => dispatch => {
                 } );
                 
                 dispatch( action( GET_AUTOFILL_SPRINTS_SUCCESS, sprints ) );
-            }else{
+            } else {
                 dispatch( action( GET_AUTOFILL_SPRINTS_FAIL,
                     "Error, unable to get autofill data for sprints."
                 ) );
@@ -90,7 +90,7 @@ export const GET_AUTOFILL_LESSONS_INIT = "GET_AUTOFILL_LESSONS_INIT";
 export const GET_AUTOFILL_LESSONS_SUCCESS = "GET_AUTOFILL_LESSONS_SUCCESS";
 export const GET_AUTOFILL_LESSONS_FAIL = "GET_AUTOFILL_LESSONS_FAIL";
 
-export const getAutoFillLessonsForSprint = (sprint: ISprint) => dispatch => {
+export const getAutoFillLessonsForSprint = ( sprint: ISprint ) => dispatch => {
     
     dispatch( action( GET_AUTOFILL_LESSONS_INIT ) );
     store.collection( "autoFill" )
@@ -102,9 +102,9 @@ export const getAutoFillLessonsForSprint = (sprint: ISprint) => dispatch => {
         .collection( "lessons" )
         .get()
         .then( res => {
-            debugger;
-            if( !res.empty ){
-                const lessons: {[id: string]: ILesson} = {};
+            
+            if ( !res.empty ) {
+                const lessons: { [ id: string ]: ILesson } = {};
                 res.docs.forEach( lesson => {
                     const data = lesson.data() as ILesson;
                     data.id = lesson.id;
@@ -112,14 +112,14 @@ export const getAutoFillLessonsForSprint = (sprint: ISprint) => dispatch => {
                 } );
                 
                 dispatch( action( GET_AUTOFILL_LESSONS_SUCCESS, lessons ) );
-            }else{
+            } else {
                 dispatch( action( GET_AUTOFILL_LESSONS_FAIL,
                     `Error, unable to get autofill data for ${ sprint.name } lessons.`
                 ) );
             }
         } )
         .catch( err => {
-            debugger;
+            
             dispatch( action( GET_AUTOFILL_LESSONS_FAIL, err.message ) );
         } );
 };
@@ -133,16 +133,16 @@ export const getAutoFillTas = () => dispatch => {
     store.collection( "autoFill" ).doc( "web" ).collection( "tas" )
         .get()
         .then( res => {
-            if( !res.empty ){
-                const tas: {[id: string]: ITas} = {};
+            if ( !res.empty ) {
+                const tas: { [ id: string ]: ITa } = {};
                 res.docs.forEach( ta => {
-                    const data = ta.data() as ITas;
+                    const data = ta.data() as ITa;
                     data.id = ta.id;
                     tas[ data.id ] = data;
                 } );
                 
                 dispatch( action( GET_AUTOFILL_TAS_SUCCESS, tas ) );
-            }else{
+            } else {
                 dispatch( action( GET_AUTOFILL_TAS_FAIL,
                     `Error, unable to get autofill data for the TA's.`
                 ) );
@@ -161,8 +161,8 @@ export const getAutoFillPMS = () => dispatch => {
     store.collection( "users" )
         .get()
         .then( res => {
-            if( !res.empty ){
-                const pms: {[id: string]: IPms} = {};
+            if ( !res.empty ) {
+                const pms: { [ id: string ]: IPms } = {};
                 res.docs.forEach( pm => {
                     const data = pm.data() as IPms;
                     data.id = pm.id;
@@ -170,7 +170,7 @@ export const getAutoFillPMS = () => dispatch => {
                 } );
                 
                 dispatch( action( GET_AUTOFILL_PMS_SUCCESS, pms ) );
-            }else{
+            } else {
                 console.log( "Error: Unable to get PM's" );
                 dispatch( action( GET_AUTOFILL_PMS_FAIL,
                     `Error, unable to get PMs.`
@@ -191,8 +191,8 @@ export const getAutoFillCourses = () => dispatch => {
     store.collection( "autoFill" ).doc( "web" ).collection( "courses" )
         .get()
         .then( res => {
-            if( !res.empty ){
-                const courses: {[id: string]: ICourse} = {};
+            if ( !res.empty ) {
+                const courses: { [ id: string ]: ICourse } = {};
                 res.docs.forEach( course => {
                     const data = course.data() as ICourse;
                     data.id = course.id;
@@ -200,7 +200,7 @@ export const getAutoFillCourses = () => dispatch => {
                 } );
                 
                 dispatch( action( GET_AUTOFILL_COURSES_SUCCESS, courses ) );
-            }else{
+            } else {
                 console.log( "Error: Unable to get courses" );
                 dispatch( action( GET_AUTOFILL_COURSES_FAIL,
                     `Error, unable to get courses.`

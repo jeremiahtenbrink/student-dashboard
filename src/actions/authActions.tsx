@@ -2,6 +2,7 @@ import firebase, { store } from "../firebase";
 import { getUserById } from "./usersActions";
 import { getAutoFillInit } from "./autofill";
 import { push } from "connected-react-router";
+import { action } from "./action";
 
 export const GOOGLE_PROVIDER = "GOOGLE_PROVIDER";
 export const GITHUB_PROVIDER = "GITHUB_PROVIDER";
@@ -14,7 +15,7 @@ export const AUTH_SUCCESS = "AUTH_SUCCESS";
 export const AUTH_FAILED = "AUTH_FAILED";
 
 export const checkAuth = () => dispatch => {
-    debugger;
+    
     dispatch( { type: AUTH_INIT } );
     const { currentUser } = firebase.auth();
     
@@ -54,7 +55,10 @@ export const signIn = authType => dispatch => {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
                         } );
+                    }else {
+                        dispatch(action(SIGNIN_SUCCESS, result.user.uid))
                     }
+                    
                     getUserById( result.user.uid )( dispatch );
                 } )
                 .catch( function( error ){
@@ -71,6 +75,8 @@ export const signIn = authType => dispatch => {
                             type: SIGNIN_NEW_USER,
                             payload: result.user.uid,
                         } );
+                    }else {
+                        dispatch(action(SIGNIN_SUCCESS, result.user.uid))
                     }
     
                     getUserById( result.user.uid )( dispatch );
