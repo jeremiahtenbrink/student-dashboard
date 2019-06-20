@@ -156,6 +156,7 @@ export const usersReducer = ( state: IState = initialState,
         case CREATE_NEW_USER_SUCCESS:
             return {
                 ...state, creatingNewUser: false, user: action.payload,
+                isAuthenticated: true,
             };
         case CREATE_NEW_USER_FAILED:
             return {

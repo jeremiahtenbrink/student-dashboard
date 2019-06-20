@@ -8,6 +8,7 @@ import requireAuth from "./AuthRoutes";
 import Dashboard from "./Views/Dashboard";
 import Retro from "./Views/Retro";
 import firebase from "./firebase";
+import Sprint from "./Views/Sprint";
 
 interface IProps {
     checkAuth: Function;
@@ -50,6 +51,11 @@ class App extends React.Component<IProps, IState> {
             />
             <Route path="/retro"
                    component={ requireAuth( Retro,
+                       this.props.isAuthenticated
+                   ) }
+            />
+            <Route path="/sprint"
+                   component={ requireAuth( Sprint,
                        this.props.isAuthenticated
                    ) }
             />

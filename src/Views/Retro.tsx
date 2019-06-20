@@ -1,12 +1,13 @@
 import React from "react";
 import {
-    Layout, Row, Col, Button, Card, Icon, Modal
+    Layout, Row, Col, Button, Card, Icon, Modal, Select, Form
 } from "antd";
 import MakeInput from "../Components/MakeInput";
 import { connect } from "react-redux";
 import { IUser } from "../types/UserInterface";
 import { ILesson } from "../types/LessonInterface";
 import { History } from "history";
+import { getAutoFillCourses } from "../actions/autofill";
 
 class Retro extends React.Component<IProps> {
     state = {
@@ -20,6 +21,10 @@ class Retro extends React.Component<IProps> {
         blockers: "",
         other: ""
     };
+    
+    componentDidMount(): void {
+        this.props.getAutoFillCourses();
+    }
     
     onChange = e => {
         this.setState( {
@@ -60,7 +65,12 @@ class Retro extends React.Component<IProps> {
         window.open( url );
     };
     
+    onChangeSelect = ( value: string, name: string ) => {
+        this.setState( { [ name ]: value } );
+    };
+    
     render() {
+        const { Option } = Select;
         return (
             
             <Layout>
@@ -72,7 +82,8 @@ class Retro extends React.Component<IProps> {
                         actions={ [
                             <Icon
                                 type="arrow-left"
-                                onClick={ () => this.props.history.push( "/" ) }
+                                onClick={ () => this.props.history.push(
+                                    "/dashboard" ) }
                             />
                         ] }
                     >
@@ -107,20 +118,29 @@ class Retro extends React.Component<IProps> {
                             title="Student"
                             desc="Your name will be auto filled"
                         />
-                        <MakeInput
-                            type="suggest"
-                            required
-                            title="What did you study today?"
-                            name="studyToday"
-                            onChange={ select => this.setState( {
-                                studyToday: select
-                            } ) }
-                            value={ this.state.studyToday }
-                            desc="Use search to quickly find the module. Choose the one that matches the page you used in Training Kit"
-                            data={ this.props.lessons &&
-                            Object.values( this.props.lessons )
-                                .map( lesson => lesson ) as [] }
-                        />
+                        <Form.Item label={ "What did you study today?" }>
+                            <Select
+                                showSearch
+                                style={ { width: 200 } }
+                                placeholder="Lesson"
+                                optionFilterProp="children"
+                                onChange={ ( value ) => {
+                                    this.onChangeSelect( value, "studyToday" );
+                                } }
+                                value={ this.state.studyToday }
+                                filterOption={ ( input,
+                                                 option ) => typeof option.props.children ===
+                                "string" ? option.props.children.toLowerCase()
+                                    .indexOf( input.toLowerCase() ) >= 0 : '' }
+                            >
+                                { this.props.lessons &&
+                                Object.values( this.props.lessons )
+                                    .map( lesson => {
+                                        return <Option key={ lesson.id }
+                                                       value={ lesson.name }>{ `${ lesson.name }` }</Option>;
+                                    } ) }
+                            </Select>
+                        </Form.Item>
                         <MakeInput
                             type="disabled"
                             required
@@ -216,13 +236,14 @@ class Retro extends React.Component<IProps> {
 }
 
 const mstp = state => ( {
-    user: state.users.user, lessons: state.users.lessons,
+    user: state.users.user, lessons: state.autoFill.lessons,
 } );
 
 interface IProps {
     user: IUser;
     lessons: ILesson[];
     history: History;
+    getAutoFillCourses: Function;
 }
 
-export default connect( mstp )( Retro );
+export default connect( mstp, { getAutoFillCourses } )( Retro );

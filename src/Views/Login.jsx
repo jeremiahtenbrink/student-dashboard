@@ -38,8 +38,6 @@ class Login extends React.Component{
         } );
     };
     
-    
-    
     render(){
         return ( <>
             <Row
@@ -141,6 +139,8 @@ class Login extends React.Component{
                             <h3>Welcome to the lambda school (unoffical)
                                 pm dashboard.</h3>
                             <h6>Login with either google or github</h6>
+                            { this.props.authError &&
+                            <p className={ "color-red" }>{ this.props.authError }</p> }
                             <Button
                                 className="google-btn"
                                 shape="round"
@@ -167,7 +167,10 @@ class Login extends React.Component{
 }
 
 const mapStateToProps = ( { auth } ) => ( {
-    isLoading: auth.isLoading, newUser: auth.newUser, uid: auth.uid,
+    isLoading: auth.isLoading,
+    newUser: auth.newUser,
+    uid: auth.uid,
+    authError: auth.error,
 } );
 
 export default connect( mapStateToProps, { signIn, createUser }, )( Login );
