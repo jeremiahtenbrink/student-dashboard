@@ -2,6 +2,7 @@ import React from "react";
 import {
     Layout, Row, Col, Button, Card, Icon, Modal, Form, Select
 } from "antd";
+
 import MakeInput from "../Components/MakeInput";
 import { connect } from "react-redux";
 import { IUser } from "../types/UserInterface";
@@ -19,6 +20,9 @@ class Sprint extends React.Component<IProps, IState> {
         isSubmitting: false,
         inputs: {},
     };
+    
+    componentDidMount(): void {
+    }
     
     onChange = e => {
         e.persist();
@@ -130,7 +134,7 @@ class Sprint extends React.Component<IProps, IState> {
                             onChange={ this.onChange }
                             name={ "What could have gone better?" }
                         />
-                        <Form.Item label={ "Which sprint did you do?" }>
+                        {/*<Form.Item label={ "Which sprint did you do?" }>*/}
                             {/*<Select*/ }
                             {/*showSearch*/ }
                             {/*style={ { width: 200 } }*/ }
@@ -151,8 +155,8 @@ class Sprint extends React.Component<IProps, IState> {
                                 {/*return <Option key={ lesson.id }*/ }
                                 {/*value={ lesson.name }>{ `${ lesson.name }` }</Option>;*/ }
                                 {/*} ) }*/ }
-                            </Select>
-                        </Form.Item>
+                            {/*</Select>*/}
+                        {/*</Form.Item>*/}
                         <Button
                             type="primary"
                             onClick={ this.submit }
