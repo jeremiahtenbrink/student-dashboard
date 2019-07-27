@@ -15,6 +15,9 @@ import { IUser } from "../types/UserInterface";
 import { ISprint } from "../types/SprintInterface";
 import { IStudentLesson } from "../types/SutdentLessons";
 import { ICourse } from "../types/CourseInterface";
+import logger from 'logging-done-simple';
+
+const Logger = logger( "dashboard" );
 
 interface IState {
     joke: string,
@@ -199,15 +202,22 @@ class Dashboard extends React.Component<IProps, IState> {
     }
 }
 
-const mstp = state => ( {
-    isLoading: state.autoFill.getLessonsInit,
-    user: state.users.user,
-    sprints: state.autoFill.sprints,
-    studentLessons: state.users.studentLessons,
-    gettingSprints: state.autoFill.getSprintsInit,
-    gettingSprintsSuccess: state.autoFill.getSprintsSuccess,
-    courses: state.autoFill.courses,
-} );
+const mstp = state => {
+    Logger.setStyle( 'info', "background-color: blue, color: white" );
+    Logger.info( "inside of auth", state, "reducer" );
+    Logger.warn( "inside of auth", state, "reducer" );
+    Logger.error( "inside of auth", state, "reducer" );
+    Logger.log( "inside of auth", state, "reducer" );
+    return {
+        isLoading: state.autoFill.getLessonsInit,
+        user: state.users.user,
+        sprints: state.autoFill.sprints,
+        studentLessons: state.users.studentLessons,
+        gettingSprints: state.autoFill.getSprintsInit,
+        gettingSprintsSuccess: state.autoFill.getSprintsSuccess,
+        courses: state.autoFill.courses,
+    }
+}
 
 interface IProps {
     isLoading: boolean,

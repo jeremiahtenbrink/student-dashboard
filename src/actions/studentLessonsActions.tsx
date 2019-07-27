@@ -2,6 +2,9 @@ import { store } from "../firebase";
 import { action } from "./action";
 import { IUser } from "../types/UserInterface";
 import { IStudentLesson } from "../types/SutdentLessons";
+import Logger from "logging-done-simple";
+
+const log = Logger( "student lessons actions" );
 
 export const FETCH_STUDENT_LESSONS_INIT = "FETCH_STUDENT_LESSONS_INIT";
 export const FETCH_STUDENT_LESSONS_SUCCESS = "FETCH_STUDENT_LESSONS_SUCCESS";
@@ -28,7 +31,7 @@ export const subscribeToStudentLessons = ( student: IUser ) => dispatch => {
                 ) );
             }
         }, err => {
-            console.log( err.message );
+            log.info( err.message );
             dispatch( action( FETCH_STUDENT_LESSONS_FAILED,
                 err.message
             ) )

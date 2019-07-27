@@ -9,6 +9,9 @@ import Dashboard from "./Views/Dashboard";
 import Retro from "./Views/Retro";
 import firebase from "./firebase";
 import Sprint from "./Views/Sprint";
+import Logger from 'logging-done-simple';
+
+const logger = Logger( "App.js" );
 
 interface IProps {
     checkAuth: Function;
@@ -30,6 +33,7 @@ class App extends React.Component<IProps, IState> {
     
     componentDidMount() {
         debugger;
+        logger.info( "App.js mounted" );
         this.unregisterAuthObserver = firebase.auth()
             .onAuthStateChanged( () => this.props.checkAuth() );
     }

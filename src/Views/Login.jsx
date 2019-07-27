@@ -6,6 +6,9 @@ import { Row, Col, Button, Form, Input, Select } from "antd";
 import { connect } from "react-redux";
 import LoginImage from "../assets/login.svg";
 import "../assets/Login.scss";
+import Logger from "logging-done-simple";
+
+const log = Logger( "Login.js" );
 
 class Login extends React.Component{
     state = {
@@ -166,11 +169,18 @@ class Login extends React.Component{
     }
 }
 
-const mapStateToProps = ( { auth } ) => ( {
-    isLoading: auth.isLoading,
-    newUser: auth.newUser,
-    uid: auth.uid,
-    authError: auth.error,
-} );
+const mapStateToProps = ( { auth } ) => {
+    debugger;
+    log.info( "inside of auth", auth, "reducer" );
+    log.warn( "inside of auth", auth, "reducer" );
+    log.error( "inside of auth", auth, "reducer" );
+    log.log( "inside of auth", auth, "reducer" );
+    return {
+        isLoading: auth.isLoading,
+        newUser: auth.newUser,
+        uid: auth.uid,
+        authError: auth.error,
+    };
+};
 
 export default connect( mapStateToProps, { signIn, createUser }, )( Login );
