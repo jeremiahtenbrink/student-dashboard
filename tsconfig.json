@@ -20,7 +20,8 @@
     "noEmit": true,
     "jsx": "preserve",
     "noImplicitAny": false,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "noEmitOnError": false
   },
   "include": [
     "src"
